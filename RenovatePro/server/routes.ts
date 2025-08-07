@@ -1,10 +1,9 @@
 import type { Express } from "express";
-import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactSchema, insertConsultationSchema, insertCostEstimateSchema } from "@shared/schema";
 import { z } from "zod";
 
-export async function registerRoutes(app: Express): Promise<Server> {
+export function registerRoutes(app: Express) {
   // Contact form submission
   app.post("/api/contacts", async (req, res) => {
     try {
@@ -86,7 +85,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all cost estimates
   app.get("/api/cost-estimates", async (req, res) => {
     try {
       const estimates = await storage.getCostEstimates();
@@ -96,6 +94,4 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
-  return httpServer;
 }
