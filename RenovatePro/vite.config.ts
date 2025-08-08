@@ -31,6 +31,7 @@ export default defineConfig({
       output: {
         format: "esm",
       },
+      external: ["esbuild"],
     },
   },
   server: {
