@@ -12,13 +12,22 @@ export function registerRoutes(app: Express) {
 
       const webhookUrl = process.env.N8N_WEBHOOK_URL;
       if (webhookUrl) {
-        fetch(webhookUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(contact),
-        }).catch((err) => {
+        try {
+          const resp = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(contact),
+          });
+          if (!resp.ok) {
+            console.error(
+              "n8n webhook responded with",
+              resp.status,
+              await resp.text(),
+            );
+          }
+        } catch (err) {
           console.error("Error forwarding contact to n8n:", err);
-        });
+        }
       }
 
       res.json(contact);
