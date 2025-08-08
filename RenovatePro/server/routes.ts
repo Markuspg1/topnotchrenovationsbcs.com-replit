@@ -9,6 +9,18 @@ export function registerRoutes(app: Express) {
     try {
       const validatedData = insertContactSchema.parse(req.body);
       const contact = await storage.createContact(validatedData);
+
+      const webhookUrl = process.env.N8N_WEBHOOK_URL;
+      if (webhookUrl) {
+        fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(contact),
+        }).catch((err) => {
+          console.error("Error forwarding contact to n8n:", err);
+        });
+      }
+
       res.json(contact);
     } catch (error) {
       if (error instanceof z.ZodError) {
