@@ -58,10 +58,14 @@ export class MemStorage implements IStorage {
 
   async createContact(insertContact: InsertContact): Promise<Contact> {
     const id = randomUUID();
-    const contact: Contact = { 
-      ...insertContact, 
+    const contact: Contact = {
+      ...insertContact,
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
+      serviceArea: insertContact.serviceArea ?? null,
+      projectType: insertContact.projectType ?? null,
+      projectDetails: insertContact.projectDetails ?? null,
+      preferredContact: insertContact.preferredContact ?? null,
     };
     this.contacts.set(id, contact);
     return contact;
@@ -75,11 +79,15 @@ export class MemStorage implements IStorage {
 
   async createConsultation(insertConsultation: InsertConsultation): Promise<Consultation> {
     const id = randomUUID();
-    const consultation: Consultation = { 
-      ...insertConsultation, 
+    const consultation: Consultation = {
+      ...insertConsultation,
       id,
       status: "pending",
-      createdAt: new Date()
+      createdAt: new Date(),
+      serviceArea: insertConsultation.serviceArea ?? null,
+      projectType: insertConsultation.projectType ?? null,
+      projectDetails: insertConsultation.projectDetails ?? null,
+      preferredDate: insertConsultation.preferredDate ?? null,
     };
     this.consultations.set(id, consultation);
     return consultation;
@@ -103,10 +111,11 @@ export class MemStorage implements IStorage {
 
   async createCostEstimate(insertEstimate: InsertCostEstimate): Promise<CostEstimate> {
     const id = randomUUID();
-    const estimate: CostEstimate = { 
-      ...insertEstimate, 
+    const estimate: CostEstimate = {
+      ...insertEstimate,
       id,
-      createdAt: new Date()
+      createdAt: new Date(),
+      squareFootage: insertEstimate.squareFootage ?? null,
     };
     this.costEstimates.set(id, estimate);
     return estimate;

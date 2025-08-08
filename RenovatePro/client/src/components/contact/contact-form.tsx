@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,7 +30,7 @@ export default function ContactForm() {
     handleSubmit,
     reset,
     setValue,
-    watch,
+    control,
     formState: { errors }
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -38,6 +38,11 @@ export default function ContactForm() {
       preferredContact: "either"
     }
   });
+
+  useEffect(() => {
+    register("serviceArea");
+    register("projectType");
+  }, [register]);
 
   const contactMutation = useMutation({
     mutationFn: async (data: ContactFormData) => {
@@ -209,25 +214,31 @@ export default function ContactForm() {
             <Label className="text-sm font-medium text-warm-gray mb-3">
               Preferred Contact Method
             </Label>
-            <RadioGroup
-              defaultValue="either"
-              onValueChange={(value) => setValue("preferredContact", value as "phone" | "email" | "either")}
-              className="flex gap-6"
-              data-testid="radio-contact-method"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="phone" id="phone-contact" />
-                <Label htmlFor="phone-contact">Phone Call</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="email" id="email-contact" />
-                <Label htmlFor="email-contact">Email</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="either" id="either-contact" />
-                <Label htmlFor="either-contact">Either</Label>
-              </div>
-            </RadioGroup>
+            <Controller
+              name="preferredContact"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex gap-6"
+                  data-testid="radio-contact-method"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="phone" id="phone-contact" />
+                    <Label htmlFor="phone-contact">Phone Call</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="email" id="email-contact" />
+                    <Label htmlFor="email-contact">Email</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="either" id="either-contact" />
+                    <Label htmlFor="either-contact">Either</Label>
+                  </div>
+                </RadioGroup>
+              )}
+            />
           </div>
 
           <Button 
