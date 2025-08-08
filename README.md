@@ -19,4 +19,8 @@ npm run build    # build for production
 npm run check    # type-check with TypeScript
 ```
 
+## Environment Variables
+
+Set `N8N_WEBHOOK_URL` to an n8n webhook endpoint to forward contact form submissions for further processing (emails, Google Sheets, etc.).
+
 See [`RenovatePro/replit.md`](RenovatePro/replit.md) for a more detailed architectural overview.
